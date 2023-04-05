@@ -104,34 +104,136 @@ class Game(Frame):
 
 
         # grabs
+        r1.addGrabs('key')
+        r2.addGrabs('fire')
+        r3.addGrabs('doug')
+        r4.addGrabs('butter')
 
         # set current room
-        pass
+        self.currentRoom = r1
+        
 
     def setupGUI(self):
-        pass
+        # input
+        self.playerInput = Entry(self, bg='white', fg='black')
+        self.playerInput.bind('<Return>', self.process) 
+        self.playerInput.pack(side=BOTTOM, fill=X)
+        self.playerInput.focus()
+
+        # image 
+        img = None
+        self.imageContainer = Label(self, width=Game.WIDTH//2, image=img)
+        self.imageContainer.image = img
+        self.imageContainer.pack(side=LEFT, fill=Y)
+        self.imageContainer.pack_propagate(False)
+
+        # text
+        textContainer = Frame(self, width=Game.WIDTH//2)
+        self.text = Text(textContainer, bg='lightgrey', fg='black', state=DISABLED)
+        self.text.pack(fill=Y, expand=1) 
+        textContainer.pack(side=RIGHT, fill=Y) 
+        textContainer.pack_propagate(False) 
+
 
     def setRoomImage(self):
-        pass
+        if self.currentRoom == None:
+            img = PhotoImage(file='skull.gif')
+        else:
+            img = PhotoImage(file='self.currentRoom.image')
+        
+        self.imageContainer.config(image=img)
+        self.imageContainer.image = img
 
-    def setStatus(self):
-        pass
+
+    def setStatus(self, status):
+        self.text.config(state=NORMAL)
+        self.text.delete(1.0, END)
+
+        if self.currentRoom == None:
+            self.text.insert(END, Game.STATUS_DEATH)
+        else:
+            content = f'{self.currentRoom}\nYou are carrying:{self.inventory}\n\n{status}'
+            self.text.insert(END, content)
+        
+        self.text.config(state=DISABLED) 
+
 
     def clearEntery(self):
-        pass
+        self.playerInput.delete(0,END)
 
-    def handleGo(self):
-        pass
 
-    def handleTake(self):
-        pass
+    def handleGo(self, dest):
+        status = Game.STATUS_BAD_EXIT
 
-    def handleLook(self):
-        pass
+        if dest in self.currentRoom.exits:
+            self.currentRoom = self.currentRoom.exits[dest]
+            status = Game.STATUS_ROOM_CHANGE
+        
+        self.setStatus(status)
+        self.setRoomImage()
+
+    def handleLook(self, item):
+        status = Game.STATUS_BAD_ITEM
+
+        if item in self.currentRoom.items:
+            status = self.currentRoom.items[item]
+        
+        self.setStatus(status)
+
+
+    def handleTake(self, grabs):
+        status = Game.STATUS_BAD_GRABS
+
+        if grabs in self.currentRoom.grabbables:
+            self.inventory.append(self.currentRoom.grabbables[grabs])
+            self.currentRoom.grabbables.remove(grabs)
+            status = Game.STATUS_GRABBED
+        
+        self.setStatus(status)
+
 
     def play(self):
-        pass
+        self.setupGame()
+        self.setupGUI()
+        self.setRoomImage()
+        self.setStatus('')
+
 
     def process(self, event):
-        pass
+        action = self.playerInput.get()
+        action = action.lower()
+        
+        if action in Game.EXIT_ACTIONS:
+            exit()
 
+        if self.currentRoom == None:
+            self.clearEntery()
+            return 
+        
+        words = action.split()
+        
+        if len(words) != 2:
+            self.setStatus(Game.STATUS_DEFALT)
+            return 
+        
+        self.clearEntery()
+
+        verb = words[0]
+        noun = words[1]
+
+        match verb:
+            case 'go':
+                self.handleGo(dest=noun)
+
+            case 'look':
+                self.handleLook(item=noun)
+
+            case 'take':
+                self.handleTake(grabs=noun)
+
+            
+window = Tk()
+window.title('Room Adventure... RevOluTionS')
+game = Game(window)
+game.play()
+window.mainloop()
