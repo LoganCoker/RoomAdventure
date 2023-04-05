@@ -38,7 +38,7 @@ class Room:
 
         result += 'Exits: '
         for exits in self.exits.keys():
-            resutl += exits + ' '
+            result += exits + ' '
         result += '\n'
 
         return result
@@ -139,7 +139,7 @@ class Game(Frame):
         if self.currentRoom == None:
             img = PhotoImage(file='skull.gif')
         else:
-            img = PhotoImage(file='self.currentRoom.image')
+            img = PhotoImage(file=self.currentRoom.image)
         
         self.imageContainer.config(image=img)
         self.imageContainer.image = img
