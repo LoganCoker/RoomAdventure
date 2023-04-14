@@ -3,6 +3,7 @@
 # description: room thing 
 
 from tkinter import * 
+from item import *
 
 
 
@@ -13,32 +14,34 @@ class Room:
         self.name = name
         self.image = imageFilepath
         self.exits = {} 
-        self.items = {}
-        self.grabbables = [] 
+        self.items: list[Item] = []
+        self.itemNames: list[str] = []    
+
 
     def addExit(self, label:str, room:'Room'): 
         self.exits[label] = room
     
-    def addItem(self, label:str, desc:str):
-        self.items[label] = desc 
 
-    def addGrabs(self, grab:str):
-        self.grabbables.append(grab)
-
-    def delGrab(self, grab:str):
-        self.grabbables.remove(grab)
+    def addItem(self, item:Item):
+        self.items.append(item) 
     
+    def addItemNames(self):
+        for item in self.items:
+            self.itemNames.append(item.name)
+
+    
+
     def __str__(self) -> str:
         result = f'You are in {self.name}\n'
 
         result += 'You see: '
-        for item in self.items.keys():
-            result += item + ' '
+        for item in self.itemNames:
+            result += item + ', '
         result += '\n'
 
         result += 'Exits: '
         for exits in self.exits.keys():
-            result += exits + ' '
+            result += exits + ', '
         result += '\n'
 
         return result
@@ -73,6 +76,7 @@ class Game(Frame):
         r2 = Room('Room 2', 'room2.gif')
         r3 = Room('Room 3', 'room3.gif')
         r4 = Room('Room 4', 'room4.gif')
+        rooms = [r1, r2, r3, r4]
 
 
         # add exits
@@ -90,24 +94,23 @@ class Game(Frame):
         r4.addExit('south', None) 
 
         # add items 
-        r1.addItem('chair', 'legs')
-        r1.addItem('more chair', 'some leg')
+        r1.addItem(chair)
+        r1.addItem(chair)
+        r1.addItem(key)
 
-        r2.addItem('fire place', 'fire.exe running')
-        r2.addItem('extraChair', 'with leg')
+        r2.addItem(table)
+        r2.addItem(bookcase)
+        r2.addItem(book)
 
-        r3.addItem('desk', 'made of broken chair')
-        r3.addItem('dimsbale_dimmadome', 'Owned by Doug Dimmadome, onwer of the Dimsdale Dimmodme')
-        r3.addItem('chair.exe', 'stoped working')
+        r3.addItem(bookcase)
+        # r3.addItem('dimsbale_dimmadome', 'Owned by Doug Dimmadome, onwer of the Dimsdale Dimmodme')
+        r3.addItem(debris)
 
-        r4.addItem('croissant', 'butter')
-
-
-        # grabs
-        r1.addGrabs('key')
-        r2.addGrabs('fire')
-        r3.addGrabs('doug')
-        r4.addGrabs('butter')
+        r4.addItem(table)
+        r4.addItem(crois)
+        
+        for room in rooms:
+            room.addItemNames()
 
         # set current room
         self.currentRoom = r1
@@ -172,22 +175,32 @@ class Game(Frame):
         self.setStatus(status)
         self.setRoomImage()
 
-    def handleLook(self, item):
+
+    def handleLook(self, item:str):
         status = Game.STATUS_BAD_ITEM
 
-        if item in self.currentRoom.items:
-            status = self.currentRoom.items[item]
+
+        if item in allItemsStrList and item in self.currentRoom.itemNames:
+            index = allItemsStrList.index(item) 
+            iteM:Item = allItemList[index] 
+            status = iteM.description
         
+
         self.setStatus(status)
 
 
     def handleTake(self, grabs):
         status = Game.STATUS_BAD_GRABS
 
-        if grabs in self.currentRoom.grabbables:
-            self.inventory.append(self.currentRoom.grabbables[grabs])
-            self.currentRoom.grabbables.remove(grabs)
-            status = Game.STATUS_GRABBED
+        if grabs in allItemsStrList and grabs in self.currentRoom.itemNames:
+            index = allItemsStrList.index(grabs) 
+            iteM:Item = allItemList[index] 
+            if iteM.grabbable:
+                self.currentRoom.items.remove(iteM)
+                self.currentRoom.itemNames.remove(str(iteM))
+                self.inventory.append(str(iteM))
+                status = Game.STATUS_GRABBED
+
         
         self.setStatus(status)
 
