@@ -1,3 +1,9 @@
+#######
+# Names: Logan Coker
+# desc: Imporved room adventrue thing
+#######
+
+
 from tkinter import *
 from game import *
 

@@ -1,7 +1,3 @@
-# name: Logan Coker 
-# date: 3/29/23
-# description: room thing 
-
 from tkinter import * 
 from item import *
 from random import randint
