@@ -1,6 +1,6 @@
 from tkinter import *
 from roomadventure import *
-from random import seed,Random
+from random import Random
 
 
 class Game(Frame):
@@ -36,19 +36,12 @@ class Game(Frame):
         self._seed = seed_
     ###
 
-    def randomFloor(self, seed_:int, c:Character, floorNum:int):
+    def randomFloor(self, seed_:int):
         gameSeed = Random(seed_)
         numRooms = gameSeed.randint(5,15) 
 
         # pre-set rooms
-        s1 = Room('Starting Room')
-        t1 = Treasure('Treasure Room', c, floorNum)
-        t1.addItemNames()
-        h1 = Shop('Shop') 
-        h1.addItemNames()
-        u1 = Room('unsued')
-        b1 = Boss('Boss Room', floorNum) 
-        b1.addItemNames()
+        s1 = Room('Starting Room', 'room2.gif')
 
         floor : list[Room] = []
         floor.append(s1)
@@ -62,19 +55,19 @@ class Game(Frame):
             n = 0
             while n == 0:
                 direction = gameSeed.randint(1,8) 
-                if direction in [1,2] and 'north' not in floor[i].exitLocations:
+                if direction in [1,2] and 'north' not in floor[i].exits:
                     floor[i].addExit('north', floor[i+1])
                     floor[i+1].addExit('south', floor[i])
                     n = 1
-                elif direction in [3,4] and 'east' not in floor[i].exitLocations: 
+                elif direction in [3,4] and 'east' not in floor[i].exits: 
                     floor[i].addExit('east', floor[i+1])
                     floor[i+1].addExit('west', floor[i])
                     n = 1
-                elif direction in [5,6] and 'south' not in floor[i].exitLocations:
+                elif direction in [5,6] and 'south' not in floor[i].exits:
                     floor[i].addExit('south', floor[i+1]) 
                     floor[i+1].addExit('north', floor[i])
                     n = 1
-                elif direction in [7,8] and 'west' not in floor[i].exitLocations: 
+                elif direction in [7,8] and 'west' not in floor[i].exits: 
                     floor[i].addExit('west', floor[i+1])
                     floor[i+1].addExit('east', floor[i])
                     n = 1
@@ -83,76 +76,8 @@ class Game(Frame):
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
         
-        # add Treasure room
-        n1 = 0
-        while n1 == 0:
-            treasure = gameSeed.randint(1,len(floor)-1)
-            tDirec = gameSeed.randint(1,4) 
-            if tDirec == 1 and 'north' not in floor[treasure].exitLocations:
-                floor[treasure].addExit('north', t1)
-                t1.addExit('south', floor[treasure])
-                n1 = 1
-            elif tDirec == 2 and 'east' not in floor[treasure].exitLocations: 
-                floor[treasure].addExit('east', t1)
-                t1.addExit('west', floor[treasure])
-                n1 = 1
-            elif tDirec == 3 and 'south' not in floor[treasure].exitLocations:
-                floor[treasure].addExit('south', t1) 
-                t1.addExit('north', floor[treasure])
-                n1 = 1
-            elif tDirec == 4 and 'west' not in floor[treasure].exitLocations: 
-                floor[treasure].addExit('west', t1)
-                t1.addExit('east', floor[treasure])
-                n1 = 1
-
-        # add Shop 
-        n1 = 0
-        while n1 == 0:
-            shop = gameSeed.randint(1,len(floor)-1)
-            hDirec = gameSeed.randint(1,4) 
-            if hDirec == 1 and 'north' not in floor[shop].exitLocations:
-                floor[shop].addExit('north', h1)
-                h1.addExit('south', floor[shop])
-                n1 = 1
-            elif hDirec == 2 and 'east' not in floor[shop].exitLocations: 
-                floor[shop].addExit('east', h1)
-                h1.addExit('west', floor[shop])
-                n1 = 1
-            elif hDirec == 3 and 'south' not in floor[shop].exitLocations:
-                floor[shop].addExit('south', h1) 
-                h1.addExit('north', floor[shop])
-                n1 = 1
-            elif hDirec == 4 and 'west' not in floor[shop].exitLocations: 
-                floor[shop].addExit('west', h1)
-                h1.addExit('east', floor[shop])
-                n1 = 1
-
-        # add Boss room
-        n1 = 0
-        while n1 == 0:
-            bDirec = gameSeed.randint(1,4) 
-            if bDirec == 1 and 'north' not in floor[-1].exitLocations:
-                floor[-1].addExit('north', b1)
-                b1.addExit('south', floor[-1])
-                n1 = 1
-            elif bDirec == 2 and 'east' not in floor[-1].exitLocations: 
-                floor[-1].addExit('east', b1)
-                b1.addExit('west', floor[-1])
-                n1 = 1
-            elif bDirec == 3 and 'south' not in floor[-1].exitLocations:
-                floor[-1].addExit('south', b1) 
-                b1.addExit('north', floor[-1])
-                n1 = 1
-            elif bDirec == 4 and 'west' not in floor[-1].exitLocations: 
-                floor[-1].addExit('west', b1)
-                b1.addExit('east', floor[-1])
-                n1 = 1
-        
-        floor.append(t1)
-        floor.append(h1) 
-        floor.append(u1)
-        floor.append(b1) 
         return s1, floor
+
 
     def setupGame(self):
         # create room
@@ -161,6 +86,7 @@ class Game(Frame):
         r3 = Room('Room 3', 'room3.gif')
         r4 = Room('Room 4', 'room4.gif')
 
+        rooms = [r1, r2, r3, r4]
 
         # add exits
         r1.addExit('east', r2)
@@ -177,24 +103,24 @@ class Game(Frame):
         r4.addExit('south', None) 
 
         # add items 
-        r1.addItem('chair', 'legs')
-        r1.addItem('more chair', 'some leg')
+        r1.addItem(chair)
+        r1.addItem(chair)
+        r1.addItem(key)
 
-        r2.addItem('fire place', 'fire.exe running')
-        r2.addItem('extraChair', 'with leg')
+        r2.addItem(table)
+        r2.addItem(bookcase)
+        r2.addItem(book)
 
-        r3.addItem('desk', 'made of broken chair')
-        r3.addItem('dimsbale_dimmadome', 'Owned by Doug Dimmadome, onwer of the Dimsdale Dimmodme')
-        r3.addItem('chair.exe', 'stoped working')
-
-        r4.addItem('croissant', 'butter')
+        r3.addItem(bookcase)
+        # r3.addItem('dimsbale_dimmadome', 'Owned by Doug Dimmadome, onwer of the Dimsdale Dimmodme')
+        r3.addItem(debris)
 
 
-        # grabs
-        r1.addGrabs('key')
-        r2.addGrabs('fire')
-        r3.addGrabs('doug')
-        r4.addGrabs('butter')
+        r4.addItem(table)
+        r4.addItem(crois)
+
+        for room in rooms:
+            room.addItemNames()
 
         # set current room
         self.currentRoom = r1
@@ -262,8 +188,10 @@ class Game(Frame):
     def handleLook(self, item):
         status = Game.STATUS_BAD_ITEM
 
-        if item in self.currentRoom.items:
-            status = self.currentRoom.items[item]
+        if item in allItemsStrList and item in self.currentRoom.itemNames:
+            index = allItemsStrList.index(item) 
+            iteM:Item = allItemList[index] 
+            status = iteM.description
         
         self.setStatus(status)
 
@@ -271,16 +199,20 @@ class Game(Frame):
     def handleTake(self, grabs):
         status = Game.STATUS_BAD_GRABS
 
-        if grabs in self.currentRoom.grabbables:
-            self.inventory.append(self.currentRoom.grabbables[grabs])
-            self.currentRoom.grabbables.remove(grabs)
-            status = Game.STATUS_GRABBED
+        if grabs in allItemsStrList and grabs in self.currentRoom.itemNames:
+            index = allItemsStrList.index(grabs) 
+            iteM:Item = allItemList[index] 
+            if iteM.grabbable:
+                self.currentRoom.items.remove(iteM)
+                self.currentRoom.itemNames.remove(str(iteM))
+                self.inventory.append(str(iteM))
+                status = Game.STATUS_GRABBED
         
         self.setStatus(status)
 
 
     def play(self):
-        self.setupGame()
+        self.currentRoom, floor = self.randomFloor(self.seed)
         self.setupGUI()
         self.setRoomImage()
         self.setStatus('')
@@ -317,3 +249,4 @@ class Game(Frame):
 
             case 'take':
                 self.handleTake(grabs=noun)
+
