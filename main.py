@@ -12,6 +12,6 @@ from game import *
 
 window = Tk()
 window.title('Room Adventure... RevOluTionS')
-game = Game(window)
+game = Game(window,77)
 game.play()
 window.mainloop()

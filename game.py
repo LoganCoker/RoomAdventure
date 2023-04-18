@@ -15,6 +15,7 @@ class Game(Frame):
     STATUS_GRABBED = 'Item Grabbed'
     STATUS_BAD_GRABS = 'I can\'t grab'
     STATUS_BAD_ITEM = 'I don\'t see'
+    STATUS_BAD_SEARCH = 'There is nothing there'
 
     WIDTH = 800
     HEIGHT = 600
@@ -36,19 +37,13 @@ class Game(Frame):
         self._seed = seed_
     ###
 
-    def randomFloor(self, seed_:int, c:Character, floorNum:int):
+    def randomFloor(self, seed_:int, floorNum:int):
         gameSeed = Random(seed_)
         numRooms = gameSeed.randint(5,15) 
 
         # pre-set rooms
         s1 = Room('Starting Room')
-        t1 = Treasure('Treasure Room', c, floorNum)
-        t1.addItemNames()
-        h1 = Shop('Shop') 
-        h1.addItemNames()
         u1 = Room('unsued')
-        b1 = Boss('Boss Room', floorNum) 
-        b1.addItemNames()
 
         floor : list[Room] = []
         floor.append(s1)
@@ -83,75 +78,7 @@ class Game(Frame):
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
         
-        # add Treasure room
-        n1 = 0
-        while n1 == 0:
-            treasure = gameSeed.randint(1,len(floor)-1)
-            tDirec = gameSeed.randint(1,4) 
-            if tDirec == 1 and 'north' not in floor[treasure].exitLocations:
-                floor[treasure].addExit('north', t1)
-                t1.addExit('south', floor[treasure])
-                n1 = 1
-            elif tDirec == 2 and 'east' not in floor[treasure].exitLocations: 
-                floor[treasure].addExit('east', t1)
-                t1.addExit('west', floor[treasure])
-                n1 = 1
-            elif tDirec == 3 and 'south' not in floor[treasure].exitLocations:
-                floor[treasure].addExit('south', t1) 
-                t1.addExit('north', floor[treasure])
-                n1 = 1
-            elif tDirec == 4 and 'west' not in floor[treasure].exitLocations: 
-                floor[treasure].addExit('west', t1)
-                t1.addExit('east', floor[treasure])
-                n1 = 1
-
-        # add Shop 
-        n1 = 0
-        while n1 == 0:
-            shop = gameSeed.randint(1,len(floor)-1)
-            hDirec = gameSeed.randint(1,4) 
-            if hDirec == 1 and 'north' not in floor[shop].exitLocations:
-                floor[shop].addExit('north', h1)
-                h1.addExit('south', floor[shop])
-                n1 = 1
-            elif hDirec == 2 and 'east' not in floor[shop].exitLocations: 
-                floor[shop].addExit('east', h1)
-                h1.addExit('west', floor[shop])
-                n1 = 1
-            elif hDirec == 3 and 'south' not in floor[shop].exitLocations:
-                floor[shop].addExit('south', h1) 
-                h1.addExit('north', floor[shop])
-                n1 = 1
-            elif hDirec == 4 and 'west' not in floor[shop].exitLocations: 
-                floor[shop].addExit('west', h1)
-                h1.addExit('east', floor[shop])
-                n1 = 1
-
-        # add Boss room
-        n1 = 0
-        while n1 == 0:
-            bDirec = gameSeed.randint(1,4) 
-            if bDirec == 1 and 'north' not in floor[-1].exitLocations:
-                floor[-1].addExit('north', b1)
-                b1.addExit('south', floor[-1])
-                n1 = 1
-            elif bDirec == 2 and 'east' not in floor[-1].exitLocations: 
-                floor[-1].addExit('east', b1)
-                b1.addExit('west', floor[-1])
-                n1 = 1
-            elif bDirec == 3 and 'south' not in floor[-1].exitLocations:
-                floor[-1].addExit('south', b1) 
-                b1.addExit('north', floor[-1])
-                n1 = 1
-            elif bDirec == 4 and 'west' not in floor[-1].exitLocations: 
-                floor[-1].addExit('west', b1)
-                b1.addExit('east', floor[-1])
-                n1 = 1
         
-        floor.append(t1)
-        floor.append(h1) 
-        floor.append(u1)
-        floor.append(b1) 
         return s1, floor
 
     def setupGame(self):
@@ -278,6 +205,29 @@ class Game(Frame):
         
         self.setStatus(status)
 
+    def handleSearch(self, item):
+        status = Game.STATUS_BAD_SEARCH
+
+        if item in allItemsStrList and item in self.currentRoom.itemNames:
+            index = allItemsStrList.index(item)
+            iteM:Item = allItemList[index]
+            if iteM == bookcase:
+                self.inventory.append(book)
+                status = "Book acquired"
+            elif iteM == rug:
+                self.inventory.append(brick)
+                status = "Brick acquired"
+            elif iteM == table:
+                self.inventory.append(crois)
+                status = "Croissant acquired"
+            elif iteM == debris:
+                self.inventory.append(brick)
+                status = "Book acquired"
+            elif iteM == shelf:
+                self.inventory.append(book)
+                status = "Book acquired"
+        self.setStatus(status)
+
 
     def play(self):
         self.setupGame()
@@ -317,3 +267,6 @@ class Game(Frame):
 
             case 'take':
                 self.handleTake(grabs=noun)
+            
+            case 'search':
+                self.handleSearch(item=noun)
