@@ -51,6 +51,7 @@ class Game(Frame):
 
         # pre-set rooms
         s1 = Room('Starting Room', 'room2.gif')
+        n1 = Room('down room', 'room4.gif')
 
         floor : list[Room] = []
         floor.append(s1)
@@ -60,6 +61,7 @@ class Game(Frame):
             floor.append(var)
         for i in range(len(floor)):
             if floor[i] == floor[-1]:
+                floor[i].addExit('down', n1)
                 break
             n = 0
             while n == 0:
@@ -189,11 +191,14 @@ class Game(Frame):
         status = Game.STATUS_BAD_EXIT
 
         if dest in self.currentRoom.exits:
+            if dest == 'down':
+                pass
             self.currentRoom = self.currentRoom.exits[dest]
             status = Game.STATUS_ROOM_CHANGE
         
         self.setStatus(status)
         self.setRoomImage()
+
 
     def handleLook(self, item):
         status = Game.STATUS_BAD_ITEM
@@ -274,7 +279,7 @@ class Game(Frame):
             if iteM == brick:
                 status = "Oww! I bwoke my teef. I should wait until the next room to eat more."
         
-        Game.setStatus(status)
+        self.setStatus(status)
 
 
     def play(self):
