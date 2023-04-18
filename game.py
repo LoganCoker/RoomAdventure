@@ -43,6 +43,14 @@ class Game(Frame):
         # pre-set rooms
         s1 = Room('Starting Room', 'room2.gif')
 
+        s2 = Room('Secret Room', 'room3.gif')
+
+        s2.addExit('door1', None)
+        s2.addExit('door2', 'Escape')
+        s2.addExit('door3', None)
+        s2.addItem(note)
+
+
         floor : list[Room] = []
         floor.append(s1)
 
@@ -72,6 +80,27 @@ class Game(Frame):
                     floor[i+1].addExit('east', floor[i])
                     n = 1
         
+        n1 = 0
+        while n1 == 0:
+            secret = gameSeed.randint(1,len(floor)-1)
+            tDirec = gameSeed.randint(1,4) 
+            if tDirec == 1 and 'north' not in floor[secret].exits:
+                floor[secret].addExit('north', s2)
+                s2.addExit('door1', floor[secret])
+                n1 = 1
+            elif tDirec == 2 and 'east' not in floor[secret].exits: 
+                floor[secret].addExit('east', s2)
+                s2.addExit('door2', floor[secret])
+                n1 = 1
+            elif tDirec == 3 and 'south' not in floor[secret].exits:
+                floor[secret].addExit('south', s2) 
+                s2.addExit('north', floor[secret])
+                n1 = 1
+            elif tDirec == 4 and 'west' not in floor[secret].exits: 
+                floor[secret].addExit('west', s2)
+                s2.addExit('door3', floor[secret])
+                n1 = 1
+
         # add Key to floor
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
@@ -85,7 +114,7 @@ class Game(Frame):
         r2 = Room('Room 2', 'room2.gif')
         r3 = Room('Room 3', 'room3.gif')
         r4 = Room('Room 4', 'room4.gif')
-
+    
         rooms = [r1, r2, r3, r4]
 
         # add exits
@@ -101,6 +130,8 @@ class Game(Frame):
         r4.addExit('north', r2)
         r4.addExit('west', r3)
         r4.addExit('south', None) 
+
+        
 
         # add items 
         r1.addItem(chair)

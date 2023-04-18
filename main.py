@@ -1,5 +1,5 @@
 #######
-# Names: Logan Coker
+# Names: Logan Coker, Bryce Mounts
 # desc: Imporved room adventrue thing
 #######
 
