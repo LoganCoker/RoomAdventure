@@ -1,8 +1,13 @@
 from tkinter import *
 from roomadventure import *
 from random import Random
+from end_screens import *
 
 croissantLimit = 0
+
+lose = False
+
+
 
 class Game(Frame):
 
@@ -267,8 +272,6 @@ class Game(Frame):
         
         Game.setStatus(status)
 
-    def kill(self):
-        pass
 
     def play(self):
         self.currentRoom, floor = self.randomFloor(self.seed)
