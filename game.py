@@ -59,7 +59,6 @@ class Game(Frame):
         s2.addExit('door3', None)
         s2.addItem(note)
 
-
         floor : list[Room] = []
         floor.append(s1)
 
@@ -114,6 +113,17 @@ class Game(Frame):
         # add Key to floor
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
+
+        m = gameSeed.randint(1, len(floor)-1)
+        floor[m].addItem(painting)
+        floor[m].addItemNames()
+
+
+        p = gameSeed.randint(1, len(floor)-1)
+        floor[p].addItem(puzzle)
+        floor[p].addItemNames()
+
+
         
         return s1
 

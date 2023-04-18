@@ -73,6 +73,8 @@ rug         = Enviornment('rug', f'A rug with holes all across it. {searchable}'
 bookcase    = Enviornment('bookcase', f'It has a lot of tattered books on it. {searchable}')
 debris      = Enviornment('debris', f'Looks like part of the ceiling collapsed. {searchable}')
 shelf       = Enviornment('shelf', f'A broken wooden shelf, barley holding itself together. {searchable}')
+painting    = Enviornment('painting', f'A colorful painting on the wall of a man standing in the middle of a vibrant room, the man has a weird neck tattoo alomost looking like the number 2. {searchable}')
+puzzle      = Enviornment('puzzle', f'It looks like a childrens puzzle, it almost seems like it is in the shape of a key, I wonder what this could mean? {searchable}')
 
 brick       = Usable('brick', f'A nearly destroyed brick, probably from the ceiling. {grabbable}')
 book        = Usable('book', f"The title is faded, I can't make it out. {grabbable}")
@@ -84,11 +86,11 @@ crois       = Usable('croissant', f'A noice warm, buttered croissant. How did it
 
 
 
-allItemList     =   [chair, table, rug, bookcase, debris, shelf, 
-                    brick, book, leg, key, note, sleg, crois]
+allItemList     =   [chair, table, rug, bookcase, debris, shelf,
+                    painting, puzzle, brick, book, leg, key, note, sleg, crois]
 
 
-allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'shelf', 'brick', 'book', 
+allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'shelf', 'painting', 'puzzle', 'brick', 'book', 
                     'chair leg', 'key', 'note', 'sleg', 'sleghammer', 'croissant'] 
 
 
