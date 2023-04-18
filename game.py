@@ -51,7 +51,6 @@ class Game(Frame):
 
         # pre-set rooms
         s1 = Room('Starting Room', 'room2.gif')
-        n1 = Room('down room', 'room4.gif')
 
         s2 = Room('Secret Room', 'room3.gif')
 
@@ -116,7 +115,6 @@ class Game(Frame):
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
         
-
         return s1
 
 
@@ -222,8 +220,6 @@ class Game(Frame):
         status = Game.STATUS_BAD_EXIT
 
         if dest in self.currentRoom.exits:
-            if dest == 'down':
-                pass
             self.currentRoom = self.currentRoom.exits[dest]
             status = Game.STATUS_ROOM_CHANGE
         
@@ -256,6 +252,7 @@ class Game(Frame):
         
         self.setStatus(status)
 
+
     def handleSearch(self, item):
         status = Game.STATUS_BAD_SEARCH
 
@@ -282,6 +279,7 @@ class Game(Frame):
                 self.inventory.append(str(book))
                 status = "Book acquired"
         self.setStatus(status)
+
 
     def handleEat(self, item):
         status = Game.STATUS_BAD_EAT
