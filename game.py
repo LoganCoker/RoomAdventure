@@ -79,7 +79,7 @@ class Game(Frame):
         floor[k].isKey = True 
         
 
-        return s1, floor
+        return s1
 
 
     def setupGame(self):
@@ -216,29 +216,33 @@ class Game(Frame):
     def handleSearch(self, item):
         status = Game.STATUS_BAD_SEARCH
 
-        if item in allItemsStrList and item in self.currentRoom.itemNames:
+        if self.currentRoom.isKey:
+            self.inventory.append(str(key))
+            status = "Key acquired"
+
+        elif item in allItemsStrList and item in self.currentRoom.itemNames:
             index = allItemsStrList.index(item)
             iteM:Item = allItemList[index]
             if iteM == bookcase:
-                self.inventory.append(book)
+                self.inventory.append(str(book))
                 status = "Book acquired"
             elif iteM == rug:
-                self.inventory.append(brick)
+                self.inventory.append(str(brick))
                 status = "Brick acquired"
             elif iteM == table:
-                self.inventory.append(crois)
+                self.inventory.append(str(crois))
                 status = "Croissant acquired"
             elif iteM == debris:
-                self.inventory.append(brick)
+                self.inventory.append(str(brick))
                 status = "Book acquired"
             elif iteM == shelf:
-                self.inventory.append(book)
+                self.inventory.append(str(book))
                 status = "Book acquired"
         self.setStatus(status)
 
 
     def play(self):
-        self.currentRoom, floor = self.randomFloor(self.seed)
+        self.currentRoom = self.randomFloor(self.seed)
         self.setupGUI()
         self.setRoomImage()
         self.setStatus('')
