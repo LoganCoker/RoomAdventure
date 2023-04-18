@@ -34,18 +34,20 @@ class Room:
         result += 'You see: '
         for item in self.itemNames:
             result += item + ', '
+        result = result.rstrip(', ')
         result += '\n'
 
         result += 'Exits: '
         for exits in self.exits.keys():
             result += exits + ', '
+        result = result.rstrip(', ')
         result += '\n'
 
         return result
        
         
 def randomRoom(name:str) -> Room:
-    r = Room(name, 'room1.gif') 
+    r = Room(name, 'room1.jpg') 
     testVar = randint(1,100)
     if testVar > 80:
         r.addItem(chair)

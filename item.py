@@ -84,11 +84,11 @@ crois       = Usable('croissant', f'A noice warm, buttered croissant. How did it
 
 
 
-allItemList     =   [chair, table, rug, bookcase, debris, 
+allItemList     =   [chair, table, rug, bookcase, debris, shelf, 
                     brick, book, leg, key, note, sleg, crois]
 
 
-allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'brick', 'book', 
+allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'shelf', 'brick', 'book', 
                     'chair leg', 'key', 'note', 'sleg', 'sleghammer', 'croissant'] 
 
 

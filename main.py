@@ -1,15 +1,16 @@
 #######
 # Names: Logan Coker, Bryce Mounts
+# Names: Logan Coker, Andrew Rupp
 # desc: Imporved room adventrue thing
 #######
 
 
 from tkinter import *
 from game import *
+from end_screens import *
+
 
 seed = input('Seed: ')
-
-
 window = Tk()
 window.title('Room Adventure... RevOluTionS')
 game = Game(window, seed)

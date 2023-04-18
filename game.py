@@ -1,6 +1,12 @@
 from tkinter import *
 from roomadventure import *
 from random import Random
+from end_screens import *
+
+croissantLimit = 0
+
+lose = False
+
 
 
 class Game(Frame):
@@ -15,6 +21,8 @@ class Game(Frame):
     STATUS_GRABBED = 'Item Grabbed'
     STATUS_BAD_GRABS = 'I can\'t grab'
     STATUS_BAD_ITEM = 'I don\'t see'
+    STATUS_BAD_SEARCH = 'There is nothing there'
+    STATUS_BAD_EAT = 'Are you insane?! You can\'t eat that!'
 
     WIDTH = 800
     HEIGHT = 600
@@ -36,12 +44,14 @@ class Game(Frame):
         self._seed = seed_
     ###
 
+
     def randomFloor(self, seed_:int):
         gameSeed = Random(seed_)
         numRooms = gameSeed.randint(5,15) 
 
         # pre-set rooms
         s1 = Room('Starting Room', 'room2.gif')
+        n1 = Room('down room', 'room4.gif')
 
         s2 = Room('Secret Room', 'room3.gif')
 
@@ -59,6 +69,7 @@ class Game(Frame):
             floor.append(var)
         for i in range(len(floor)):
             if floor[i] == floor[-1]:
+                floor[i].addExit('down', n1)
                 break
             n = 0
             while n == 0:
@@ -105,7 +116,8 @@ class Game(Frame):
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
         
-        return s1, floor
+
+        return s1
 
 
     def setupGame(self):
@@ -210,11 +222,14 @@ class Game(Frame):
         status = Game.STATUS_BAD_EXIT
 
         if dest in self.currentRoom.exits:
+            if dest == 'down':
+                pass
             self.currentRoom = self.currentRoom.exits[dest]
             status = Game.STATUS_ROOM_CHANGE
         
         self.setStatus(status)
         self.setRoomImage()
+
 
     def handleLook(self, item):
         status = Game.STATUS_BAD_ITEM
@@ -241,9 +256,65 @@ class Game(Frame):
         
         self.setStatus(status)
 
+    def handleSearch(self, item):
+        status = Game.STATUS_BAD_SEARCH
+
+        if self.currentRoom.isKey:
+            self.inventory.append(str(key))
+            status = "Key acquired"
+
+        elif item in allItemsStrList and item in self.currentRoom.itemNames:
+            index = allItemsStrList.index(item)
+            iteM:Item = allItemList[index]
+            if iteM == bookcase:
+                self.inventory.append(str(book))
+                status = "Book acquired"
+            elif iteM == rug:
+                self.inventory.append(str(brick))
+                status = "Brick acquired"
+            elif iteM == table:
+                self.inventory.append(str(crois))
+                status = "Croissant acquired"
+            elif iteM == debris:
+                self.inventory.append(str(brick))
+                status = "Book acquired"
+            elif iteM == shelf:
+                self.inventory.append(str(book))
+                status = "Book acquired"
+        self.setStatus(status)
+
+    def handleEat(self, item):
+        status = Game.STATUS_BAD_EAT
+
+        if item in allItemsStrList and item in self.inventory:
+            index = allItemsStrList.index(item)
+            iteM:Item = allItemList[index]
+
+            if iteM == crois:
+                if croissantLimit == 1:
+                    status = 'Bro! That croissant was so good! I will never be satsified with any other food from now on. What is even the point!?!?'
+                    croissantLimit += 1
+                if croissantLimit == 2:
+                    status = 'That was dissapointing.'
+                    croissantLimit += 1
+                if croissantLimit == 3:
+                    status = 'Why?'
+                    croissantLimit += 1
+                if croissantLimit == 4:
+                    status = 'You couldn\'t take the thought of food any longer.'
+                    self.kill()            
+
+            if iteM == key:
+                self.kill()
+            
+            if iteM == brick:
+                status = "Oww! I bwoke my teef. I should wait until the next room to eat more."
+        
+        self.setStatus(status)
+
 
     def play(self):
-        self.currentRoom, floor = self.randomFloor(self.seed)
+        self.currentRoom = self.randomFloor(self.seed)
         self.setupGUI()
         self.setRoomImage()
         self.setStatus('')
@@ -280,4 +351,7 @@ class Game(Frame):
 
             case 'take':
                 self.handleTake(grabs=noun)
+            
+            case 'search':
+                self.handleSearch(item=noun)
 
