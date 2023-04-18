@@ -15,6 +15,7 @@ class Game(Frame):
     STATUS_GRABBED = 'Item Grabbed'
     STATUS_BAD_GRABS = 'I can\'t grab'
     STATUS_BAD_ITEM = 'I don\'t see'
+    STATUS_BAD_SEARCH = 'There is nothing there'
 
     WIDTH = 800
     HEIGHT = 600
@@ -35,6 +36,7 @@ class Game(Frame):
     def seed(self, seed_:int):
         self._seed = seed_
     ###
+
 
     def randomFloor(self, seed_:int):
         gameSeed = Random(seed_)
@@ -76,6 +78,7 @@ class Game(Frame):
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
         
+
         return s1, floor
 
 
@@ -210,6 +213,29 @@ class Game(Frame):
         
         self.setStatus(status)
 
+    def handleSearch(self, item):
+        status = Game.STATUS_BAD_SEARCH
+
+        if item in allItemsStrList and item in self.currentRoom.itemNames:
+            index = allItemsStrList.index(item)
+            iteM:Item = allItemList[index]
+            if iteM == bookcase:
+                self.inventory.append(book)
+                status = "Book acquired"
+            elif iteM == rug:
+                self.inventory.append(brick)
+                status = "Brick acquired"
+            elif iteM == table:
+                self.inventory.append(crois)
+                status = "Croissant acquired"
+            elif iteM == debris:
+                self.inventory.append(brick)
+                status = "Book acquired"
+            elif iteM == shelf:
+                self.inventory.append(book)
+                status = "Book acquired"
+        self.setStatus(status)
+
 
     def play(self):
         self.currentRoom, floor = self.randomFloor(self.seed)
@@ -249,4 +275,7 @@ class Game(Frame):
 
             case 'take':
                 self.handleTake(grabs=noun)
+            
+            case 'search':
+                self.handleSearch(item=noun)
 
