@@ -13,12 +13,13 @@ class Room:
         self.exits = {} 
         self.items: list[Item] = []
         self.itemNames: list[str] = []    
+        self.isKey = False
+
 
 
     def addExit(self, label:str, room:'Room'): 
         self.exits[label] = room
     
-
     def addItem(self, item:Item):
         self.items.append(item) 
     
@@ -27,7 +28,6 @@ class Room:
             self.itemNames.append(item.name)
 
     
-
     def __str__(self) -> str:
         result = f'You are in {self.name}\n'
 
@@ -44,8 +44,8 @@ class Room:
         return result
        
         
-def randomRoom(name:str, floor:int =1) -> Room:
-    r = Room(name) 
+def randomRoom(name:str) -> Room:
+    r = Room(name, 'room1.gif') 
     testVar = randint(1,100)
     if testVar > 80:
         r.addItem(chair)

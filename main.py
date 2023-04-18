@@ -7,11 +7,11 @@
 from tkinter import *
 from game import *
 
-
+seed = input('Seed: ')
 
 
 window = Tk()
 window.title('Room Adventure... RevOluTionS')
-game = Game(window,77)
+game = Game(window, seed)
 game.play()
-window.mainloop()
+window.mainloop() 
