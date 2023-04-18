@@ -78,7 +78,7 @@ brick       = Usable('brick', f'A nearly destroyed brick, probably from the ceil
 book        = Usable('book', f"The title is faded, I can't make it out. {grabbable}")
 leg         = Usable('chair leg', f'The leg of the chair I just crushed. Why did I sit on it... {grabbable}')
 key         = Usable('key', f'A very rusted key. {grabbable}') 
-note        = Usable('note', f'There is something on the note. {grabbable}')
+note        = Usable('note', f'One of these three doors lead to victory, the other three will lead to your death. Choose wisely. {grabbable}')
 sleg        = Usable('sleghammer', f'A heafty tool used for breaking things. {grabbable}') 
 crois       = Usable('croissant', f'A noice warm, buttered croissant. How did it get here? {grabbable}')
 

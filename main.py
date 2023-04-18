@@ -1,4 +1,5 @@
 #######
+# Names: Logan Coker, Bryce Mounts
 # Names: Logan Coker, Andrew Rupp
 # desc: Imporved room adventrue thing
 #######
@@ -9,15 +10,9 @@ from game import *
 from end_screens import *
 
 
-
 seed = input('Seed: ')
 window = Tk()
 window.title('Room Adventure... RevOluTionS')
 game = Game(window, seed)
 game.play()
 window.mainloop() 
-
-if lose == True:
-    game.destroy()
-    E = End(end)
-    end.mainloop()
