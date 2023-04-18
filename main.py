@@ -8,7 +8,6 @@ from tkinter import *
 from game import *
 
 
-
 seed = input('Seed: ')
 window = Tk()
 window.title('Room Adventure... RevOluTionS')
