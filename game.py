@@ -1,6 +1,12 @@
 from tkinter import *
 from roomadventure import *
 from random import Random
+from end_screens import *
+
+croissantLimit = 0
+
+lose = False
+
 
 
 class Game(Frame):
@@ -16,6 +22,7 @@ class Game(Frame):
     STATUS_BAD_GRABS = 'I can\'t grab'
     STATUS_BAD_ITEM = 'I don\'t see'
     STATUS_BAD_SEARCH = 'There is nothing there'
+    STATUS_BAD_EAT = 'Are you insane?! You can\'t eat that!'
 
     WIDTH = 800
     HEIGHT = 600
@@ -239,6 +246,35 @@ class Game(Frame):
                 self.inventory.append(str(book))
                 status = "Book acquired"
         self.setStatus(status)
+
+    def handleEat(self, item):
+        status = Game.STATUS_BAD_EAT
+
+        if item in allItemsStrList and item in self.inventory:
+            index = allItemsStrList.index(item)
+            iteM:Item = allItemList[index]
+
+            if iteM == crois:
+                if croissantLimit == 1:
+                    status = 'Bro! That croissant was so good! I will never be satsified with any other food from now on. What is even the point!?!?'
+                    croissantLimit += 1
+                if croissantLimit == 2:
+                    status = 'That was dissapointing.'
+                    croissantLimit += 1
+                if croissantLimit == 3:
+                    status = 'Why?'
+                    croissantLimit += 1
+                if croissantLimit == 4:
+                    status = 'You couldn\'t take the thought of food any longer.'
+                    self.kill()            
+
+            if iteM == key:
+                self.kill()
+            
+            if iteM == brick:
+                status = "Oww! I bwoke my teef. I should wait until the next room to eat more."
+        
+        Game.setStatus(status)
 
 
     def play(self):

@@ -1,11 +1,12 @@
 #######
-# Names: Logan Coker
+# Names: Logan Coker, Andrew Rupp
 # desc: Imporved room adventrue thing
 #######
 
 
 from tkinter import *
 from game import *
+from end_screens import *
 
 
 
@@ -15,3 +16,8 @@ window.title('Room Adventure... RevOluTionS')
 game = Game(window, seed)
 game.play()
 window.mainloop() 
+
+if lose == True:
+    game.destroy()
+    E = End(end)
+    end.mainloop()
