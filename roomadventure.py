@@ -51,7 +51,7 @@ class Room:
        
         
 def randomRoom(name:str) -> Room:
-    r = Room(name, 'room1.jpg') 
+    r = Room(name, 'room1.gif') 
     testVar = randint(1,100)
     if testVar > 80:
         r.addItem(chair)

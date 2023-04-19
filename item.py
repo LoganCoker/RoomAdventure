@@ -91,6 +91,6 @@ allItemList     =   [chair, table, rug, bookcase, debris, shelf,
 
 
 allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'shelf', 'painting', 'puzzle', 'brick', 'book', 
-                    'chair leg', 'key', 'note', 'sleg', 'sleghammer', 'croissant'] 
+                    'chair leg', 'key', 'note', 'sleg', 'croissant'] 
 
 

@@ -22,16 +22,16 @@ class End(Frame):
             self.f1, 
             text="You couldn't take the thought of food any longer.\nYou have died.",
             anchor=E,
-            bg="white",
-            fg="black",
+            bg="black",
+            fg="red",
             font=("TimesNewRoman", 20))
         
 
         self.button1 = Button(
             self.f1,
             text="Quit",
-            bg="white",
-            fg="black",
+            bg="black",
+            fg="red",
             command=quit
         )
             
