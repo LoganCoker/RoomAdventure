@@ -3,12 +3,6 @@ from roomadventure import *
 from random import Random
 from end_screens import *
 
-croissantLimit = 0
-
-lose = False
-
-
-
 class Game(Frame):
 
     EXIT_ACTIONS = ['quit', 'exit', 'q']
@@ -32,6 +26,8 @@ class Game(Frame):
         Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=1)
         self.seed = seed_
+        self.croissantLimit = 0
+        self.lose = False
     
     ###
     @property
@@ -255,33 +251,42 @@ class Game(Frame):
             iteM:Item = allItemList[index]
 
             if iteM == crois:
-                if croissantLimit == 1:
+                if self.croissantLimit == 0:
                     status = 'Bro! That croissant was so good! I will never be satsified with any other food from now on. What is even the point!?!?'
-                    croissantLimit += 1
-                if croissantLimit == 2:
+                    self.croissantLimit += 1
+        
+                elif self.croissantLimit == 1:
                     status = 'That was dissapointing.'
-                    croissantLimit += 1
-                if croissantLimit == 3:
+                    self.croissantLimit += 1
+                elif self.croissantLimit == 2:
                     status = 'Why?'
-                    croissantLimit += 1
-                if croissantLimit == 4:
+                    self.croissantLimit += 1
+                elif self.croissantLimit == 3:
                     status = 'You couldn\'t take the thought of food any longer.'
-                    self.kill()            
+                    self.clear_frame()
+                    End.croissantGUI(self)         
 
             if iteM == key:
-                self.kill()
+                self.clear_frame()
+                End.keyGUI(self)
+
             
             if iteM == brick:
                 status = "Oww! I bwoke my teef. I should wait until the next room to eat more."
         
-        Game.setStatus(status)
+        self.setStatus(status)
 
+    def clear_frame(self):
+        for widgets in self.winfo_children():
+            widgets.destroy()
 
     def play(self):
         self.currentRoom = self.randomFloor(self.seed)
         self.setupGUI()
         self.setRoomImage()
         self.setStatus('')
+    
+
 
 
     def process(self, event):
@@ -318,4 +323,7 @@ class Game(Frame):
             
             case 'search':
                 self.handleSearch(item=noun)
+            
+            case 'eat':
+                self.handleEat(item=noun)
 

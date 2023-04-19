@@ -17,7 +17,4 @@ game = Game(window, seed)
 game.play()
 window.mainloop() 
 
-if lose == True:
-    game.destroy()
-    E = End(end)
-    end.mainloop()
+

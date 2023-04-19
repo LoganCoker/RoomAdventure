@@ -1,5 +1,7 @@
 from tkinter import *
+from game import *
 
+Reset = False
 
 class End(Frame):
 
@@ -8,10 +10,11 @@ class End(Frame):
         Frame.__init__(self, parent)
         self.setupGUI()
         self.Error = False
+        self.Reset = False
 
         # if Game.status == "You couldn't take the thought of food any longer.":
     
-    def setupGUI(self):
+    def croissantGUI(self):
         self.f1 = Frame(self)
         self.display = Label(
             self.f1, 
@@ -21,15 +24,8 @@ class End(Frame):
             fg="black",
             font=("TimesNewRoman", 20))
         
-        self.button1 = Button(
-            self.f1,
-            text="Restart",
-            bg="white",
-            fg="black",
-            command=self.restart
-        )
 
-        self.button2 = Button(
+        self.button1 = Button(
             self.f1,
             text="Quit",
             bg="white",
@@ -41,11 +37,29 @@ class End(Frame):
         self.f1.pack()
         self.display.pack(fill=Y)
         self.button1.pack()
-        self.button2.pack()
     
-    def restart(self):
-            print("Restarting")
 
-end = Tk()
-end.title("End screen")
-end.geometry(f'{600}x{600}')
+    def keyGUI(self):
+        self.f1 = Frame(self)
+        self.display = Label(
+            self.f1, 
+            text="You idiot! How can you leave without the key??!",
+            anchor=E,
+            bg="white",
+            fg="black",
+            font=("TimesNewRoman", 20))
+        
+
+        self.button1 = Button(
+            self.f1,
+            text="Quit",
+            bg="white",
+            fg="black",
+            command=quit
+        )
+            
+        self.pack()
+        self.f1.pack()
+        self.display.pack(fill=Y)
+        self.button1.pack()
+
