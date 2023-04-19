@@ -65,3 +65,53 @@ class End(Frame):
         self.display.pack(fill=Y)
         self.button1.pack()
 
+    
+    def firstwinGUI(self):
+        self.f1 = Frame(self)
+        self.display = Label(
+            self.f1, 
+            text="Well done! You have the key and were able to escape!",
+            anchor=E,
+            bg="white",
+            fg="blue",
+            font=("TimesNewRoman", 20))
+        
+
+        self.button1 = Button(
+            self.f1,
+            text="Quit",
+            bg="white",
+            fg="black",
+            command=quit
+        )
+            
+        self.pack()
+        self.f1.pack()
+        self.display.pack(fill=Y)
+        self.button1.pack()
+
+    def secretwinGUI(self):
+        self.f1 = Frame(self)
+        self.display = Label(
+            self.f1, 
+            text="Good choice! Congratulations you have chosen the right door and have escaped!",
+            anchor=E,
+            bg="white",
+            fg="blue",
+            font=("TimesNewRoman", 20))
+        
+
+        self.button1 = Button(
+            self.f1,
+            text="Quit",
+            bg="white",
+            fg="black",
+            command=quit
+        )
+            
+        self.pack()
+        self.f1.pack()
+        self.display.pack(fill=Y)
+        self.button1.pack()
+
+    
