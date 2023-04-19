@@ -52,8 +52,10 @@ class Game(Frame):
 
         s2 = Room('Secret Room', 'room3.gif')
 
+        win = Room('Win Room', 'room3.gif')
+
         s2.addExit('door1', None)
-        s2.addExit('door2', 'Escape')
+        s2.addExit('door2', win)
         s2.addExit('door3', None)
         s2.addItem(note)
 
@@ -230,10 +232,9 @@ class Game(Frame):
 
         if dest in self.currentRoom.exits:
             if self.currentRoom.exits[dest].final and str(key) in self.inventory:
-                self.inventory.remove(str(key))
-                self.currentRoom = self.currentRoom.exits[dest]
-                self.currentRoom.final = False
-                status = Game.STATUS_ROOM_CHANGE + '\n Used key'
+                End.firstwinGUI(self)
+            elif self.currentRoom.exits[dest].name == str('Win Room'):
+                End.secretwinGUI(self)
             elif self.currentRoom.exits[dest].final and str(key) not in self.inventory:
                 status = Game.STATUS_NEED_KEY
             else:
