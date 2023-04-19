@@ -90,12 +90,7 @@ allItemList     =   [chair, table, rug, bookcase, debris, shelf,
                     painting, puzzle, brick, book, leg, key, note, sleg, crois]
 
 
-<<<<<<< HEAD
-allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'shelf', 'brick', 'book', 
-                    'chair leg', 'key', 'note', 'sleg', 'croissant'] 
-=======
 allItemsStrList =   ['chair', 'table', 'rug', 'bookcase', 'debris', 'shelf', 'painting', 'puzzle', 'brick', 'book', 
                     'chair leg', 'key', 'note', 'sleg', 'sleghammer', 'croissant'] 
->>>>>>> fc3dc573aad22a8db79c21d369495107dec85388
 
 

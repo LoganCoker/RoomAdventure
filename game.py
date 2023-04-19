@@ -3,6 +3,7 @@ from roomadventure import *
 from random import Random
 from end_screens import *
 
+
 class Game(Frame):
 
     EXIT_ACTIONS = ['quit', 'exit', 'q']

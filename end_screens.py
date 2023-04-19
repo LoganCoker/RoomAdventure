@@ -3,6 +3,8 @@ from game import *
 
 Reset = False
 
+
+
 class End(Frame):
 
     def __init__(self, parent):
