@@ -23,6 +23,7 @@ class Game(Frame):
     STATUS_BAD_ITEM = 'I don\'t see'
     STATUS_BAD_SEARCH = 'There is nothing there'
     STATUS_BAD_EAT = 'Are you insane?! You can\'t eat that!'
+    STATUS_NEED_KEY = 'A key is needed to pass through that door'
 
     WIDTH = 800
     HEIGHT = 600
@@ -67,7 +68,7 @@ class Game(Frame):
             floor.append(var)
         for i in range(len(floor)):
             if floor[i] == floor[-1]:
-                floor[i].addExit('down', n1)
+                floor[i].final = True
                 break
             n = 0
             while n == 0:
@@ -95,11 +96,11 @@ class Game(Frame):
             tDirec = gameSeed.randint(1,4) 
             if tDirec == 1 and 'north' not in floor[secret].exits:
                 floor[secret].addExit('north', s2)
-                s2.addExit('door1', floor[secret])
+                s2.addExit('south', floor[secret])
                 n1 = 1
             elif tDirec == 2 and 'east' not in floor[secret].exits: 
                 floor[secret].addExit('east', s2)
-                s2.addExit('door2', floor[secret])
+                s2.addExit('west', floor[secret])
                 n1 = 1
             elif tDirec == 3 and 'south' not in floor[secret].exits:
                 floor[secret].addExit('south', s2) 
@@ -107,23 +108,24 @@ class Game(Frame):
                 n1 = 1
             elif tDirec == 4 and 'west' not in floor[secret].exits: 
                 floor[secret].addExit('west', s2)
-                s2.addExit('door3', floor[secret])
+                s2.addExit('east', floor[secret])
                 n1 = 1
 
         # add Key to floor
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
 
+
+        # adds a painting to the floor
         m = gameSeed.randint(1, len(floor)-1)
         floor[m].addItem(painting)
-        floor[m].addItemNames()
+        floor[m].addItemNameSingle(painting)
 
 
+        # adds a puzzle to the floor
         p = gameSeed.randint(1, len(floor)-1)
         floor[p].addItem(puzzle)
-        floor[p].addItemNames()
-
-
+        floor[p].addItemNameSingle(puzzle)
         
         return s1
 
@@ -230,8 +232,16 @@ class Game(Frame):
         status = Game.STATUS_BAD_EXIT
 
         if dest in self.currentRoom.exits:
-            self.currentRoom = self.currentRoom.exits[dest]
-            status = Game.STATUS_ROOM_CHANGE
+            if self.currentRoom.exits[dest].final and str(key) in self.inventory:
+                self.inventory.remove(str(key))
+                self.currentRoom = self.currentRoom.exits[dest]
+                self.currentRoom.final = False
+                status = Game.STATUS_ROOM_CHANGE + '\n Used key'
+            elif self.currentRoom.exits[dest].final and str(key) not in self.inventory:
+                status = Game.STATUS_NEED_KEY
+            else:
+                self.currentRoom = self.currentRoom.exits[dest]
+                status = Game.STATUS_ROOM_CHANGE
         
         self.setStatus(status)
         self.setRoomImage()

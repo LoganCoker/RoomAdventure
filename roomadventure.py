@@ -14,6 +14,7 @@ class Room:
         self.items: list[Item] = []
         self.itemNames: list[str] = []    
         self.isKey = False
+        self.final = False
 
 
 
@@ -26,6 +27,9 @@ class Room:
     def addItemNames(self):
         for item in self.items:
             self.itemNames.append(item.name)
+        
+    def addItemNameSingle(self, item:Item):
+        self.itemNames.append(str(item))
 
     
     def __str__(self) -> str:
@@ -52,16 +56,16 @@ def randomRoom(name:str) -> Room:
     if testVar > 80:
         r.addItem(chair)
     for _ in range(2):
-        test = randint(1,5)
-        if test == 1 and table not in r.items:
+        added = randint(1,5)
+        if added == 1 and table not in r.items:
             r.addItem(table)
-        elif test == 2 and rug not in r.items:
+        elif added == 2 and rug not in r.items:
             r.addItem(rug)
-        elif test == 3 and bookcase not in r.items:
+        elif added == 3 and bookcase not in r.items:
             r.addItem(bookcase)
-        elif test == 4 and debris not in r.items:
+        elif added == 4 and debris not in r.items:
             r.addItem(debris)
-        elif test == 5 and shelf not in r.items:
+        elif added == 5 and shelf not in r.items:
             r.addItem(shelf)
     r.addItemNames()
     return r
