@@ -1,6 +1,5 @@
 #######
-# Names: Logan Coker, Bryce Mounts
-# Names: Logan Coker, Andrew Rupp
+# Names: Logan Coker, Bryce Mounts, Andrew Rupp
 # desc: Imporved room adventrue thing
 #######
 
@@ -16,3 +15,5 @@ window.title('Room Adventure... RevOluTionS')
 game = Game(window, seed)
 game.play()
 window.mainloop() 
+
+

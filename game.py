@@ -3,11 +3,6 @@ from roomadventure import *
 from random import Random
 from end_screens import *
 
-croissantLimit = 0
-
-lose = False
-
-
 
 class Game(Frame):
 
@@ -23,6 +18,7 @@ class Game(Frame):
     STATUS_BAD_ITEM = 'I don\'t see'
     STATUS_BAD_SEARCH = 'There is nothing there'
     STATUS_BAD_EAT = 'Are you insane?! You can\'t eat that!'
+    STATUS_NEED_KEY = 'A key is needed to pass through that door'
 
     WIDTH = 800
     HEIGHT = 600
@@ -32,6 +28,8 @@ class Game(Frame):
         Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=1)
         self.seed = seed_
+        self.croissantLimit = 0
+        self.lose = False
     
     ###
     @property
@@ -51,7 +49,6 @@ class Game(Frame):
 
         # pre-set rooms
         s1 = Room('Starting Room', 'room2.gif')
-        n1 = Room('down room', 'room4.gif')
 
         s2 = Room('Secret Room', 'room3.gif')
 
@@ -59,7 +56,6 @@ class Game(Frame):
         s2.addExit('door2', 'Escape')
         s2.addExit('door3', None)
         s2.addItem(note)
-
 
         floor : list[Room] = []
         floor.append(s1)
@@ -69,7 +65,7 @@ class Game(Frame):
             floor.append(var)
         for i in range(len(floor)):
             if floor[i] == floor[-1]:
-                floor[i].addExit('down', n1)
+                floor[i].final = True
                 break
             n = 0
             while n == 0:
@@ -97,11 +93,11 @@ class Game(Frame):
             tDirec = gameSeed.randint(1,4) 
             if tDirec == 1 and 'north' not in floor[secret].exits:
                 floor[secret].addExit('north', s2)
-                s2.addExit('door1', floor[secret])
+                s2.addExit('south', floor[secret])
                 n1 = 1
             elif tDirec == 2 and 'east' not in floor[secret].exits: 
                 floor[secret].addExit('east', s2)
-                s2.addExit('door2', floor[secret])
+                s2.addExit('west', floor[secret])
                 n1 = 1
             elif tDirec == 3 and 'south' not in floor[secret].exits:
                 floor[secret].addExit('south', s2) 
@@ -109,14 +105,25 @@ class Game(Frame):
                 n1 = 1
             elif tDirec == 4 and 'west' not in floor[secret].exits: 
                 floor[secret].addExit('west', s2)
-                s2.addExit('door3', floor[secret])
+                s2.addExit('east', floor[secret])
                 n1 = 1
 
         # add Key to floor
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
-        
 
+
+        # adds a painting to the floor
+        m = gameSeed.randint(1, len(floor)-1)
+        floor[m].addItem(painting)
+        floor[m].addItemNameSingle(painting)
+
+
+        # adds a puzzle to the floor
+        p = gameSeed.randint(1, len(floor)-1)
+        floor[p].addItem(puzzle)
+        floor[p].addItemNameSingle(puzzle)
+        
         return s1
 
 
@@ -222,10 +229,16 @@ class Game(Frame):
         status = Game.STATUS_BAD_EXIT
 
         if dest in self.currentRoom.exits:
-            if dest == 'down':
-                pass
-            self.currentRoom = self.currentRoom.exits[dest]
-            status = Game.STATUS_ROOM_CHANGE
+            if self.currentRoom.exits[dest].final and str(key) in self.inventory:
+                self.inventory.remove(str(key))
+                self.currentRoom = self.currentRoom.exits[dest]
+                self.currentRoom.final = False
+                status = Game.STATUS_ROOM_CHANGE + '\n Used key'
+            elif self.currentRoom.exits[dest].final and str(key) not in self.inventory:
+                status = Game.STATUS_NEED_KEY
+            else:
+                self.currentRoom = self.currentRoom.exits[dest]
+                status = Game.STATUS_ROOM_CHANGE
         
         self.setStatus(status)
         self.setRoomImage()
@@ -256,6 +269,7 @@ class Game(Frame):
         
         self.setStatus(status)
 
+
     def handleSearch(self, item):
         status = Game.STATUS_BAD_SEARCH
 
@@ -283,6 +297,7 @@ class Game(Frame):
                 status = "Book acquired"
         self.setStatus(status)
 
+
     def handleEat(self, item):
         status = Game.STATUS_BAD_EAT
 
@@ -291,33 +306,42 @@ class Game(Frame):
             iteM:Item = allItemList[index]
 
             if iteM == crois:
-                if croissantLimit == 1:
+                if self.croissantLimit == 0:
                     status = 'Bro! That croissant was so good! I will never be satsified with any other food from now on. What is even the point!?!?'
-                    croissantLimit += 1
-                if croissantLimit == 2:
+                    self.croissantLimit += 1
+        
+                elif self.croissantLimit == 1:
                     status = 'That was dissapointing.'
-                    croissantLimit += 1
-                if croissantLimit == 3:
+                    self.croissantLimit += 1
+                elif self.croissantLimit == 2:
                     status = 'Why?'
-                    croissantLimit += 1
-                if croissantLimit == 4:
+                    self.croissantLimit += 1
+                elif self.croissantLimit == 3:
                     status = 'You couldn\'t take the thought of food any longer.'
-                    self.kill()            
+                    self.clear_frame()
+                    End.croissantGUI(self)         
 
             if iteM == key:
-                self.kill()
+                self.clear_frame()
+                End.keyGUI(self)
+
             
             if iteM == brick:
                 status = "Oww! I bwoke my teef. I should wait until the next room to eat more."
         
         self.setStatus(status)
 
+    def clear_frame(self):
+        for widgets in self.winfo_children():
+            widgets.destroy()
 
     def play(self):
         self.currentRoom = self.randomFloor(self.seed)
         self.setupGUI()
         self.setRoomImage()
         self.setStatus('')
+    
+
 
 
     def process(self, event):
@@ -354,4 +378,7 @@ class Game(Frame):
             
             case 'search':
                 self.handleSearch(item=noun)
+            
+            case 'eat':
+                self.handleEat(item=noun)
 
