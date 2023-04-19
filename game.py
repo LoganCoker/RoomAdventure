@@ -232,8 +232,10 @@ class Game(Frame):
 
         if dest in self.currentRoom.exits:
             if self.currentRoom.exits[dest].final and str(key) in self.inventory:
+                self.clear_frame()
                 End.firstwinGUI(self)
             elif self.currentRoom.exits[dest].name == str('Win Room'):
+                self.clear_frame()
                 End.secretwinGUI(self)
             elif self.currentRoom.exits[dest].final and str(key) not in self.inventory:
                 status = Game.STATUS_NEED_KEY
@@ -332,9 +334,11 @@ class Game(Frame):
         
         self.setStatus(status)
 
+
     def clear_frame(self):
         for widgets in self.winfo_children():
             widgets.destroy()
+
 
     def play(self):
         self.currentRoom = self.randomFloor(self.seed)
@@ -342,8 +346,6 @@ class Game(Frame):
         self.setRoomImage()
         self.setStatus('')
     
-
-
 
     def process(self, event):
         action = self.playerInput.get()

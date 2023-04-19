@@ -73,14 +73,17 @@ rug         = Enviornment('rug', f'A rug with holes all across it. {searchable}'
 bookcase    = Enviornment('bookcase', f'It has a lot of tattered books on it. {searchable}')
 debris      = Enviornment('debris', f'Looks like part of the ceiling collapsed. {searchable}')
 shelf       = Enviornment('shelf', f'A broken wooden shelf, barley holding itself together. {searchable}')
-painting    = Enviornment('painting', f'A colorful painting on the wall of a man standing in the middle of a vibrant room, the man has a weird neck tattoo alomost looking like the number 2. {searchable}')
-puzzle      = Enviornment('puzzle', f'It looks like a childrens puzzle, it almost seems like it is in the shape of a key, I wonder what this could mean? {searchable}')
+painting    = Enviornment('painting', f'A colorful painting on the wall of a man standing in the middle \
+                of a vibrant room, the man has a weird neck tattoo alomost looking like the number 2.')
+puzzle      = Enviornment('puzzle', f'It looks like a childrens puzzle, it almost seems like it is in the \
+                          shape of a key, I wonder what this could mean?')
 
 brick       = Usable('brick', f'A nearly destroyed brick, probably from the ceiling. {grabbable}')
 book        = Usable('book', f"The title is faded, I can't make it out. {grabbable}")
 leg         = Usable('chair leg', f'The leg of the chair I just crushed. Why did I sit on it... {grabbable}')
 key         = Usable('key', f'A very rusted key. {grabbable}') 
-note        = Usable('note', f'One of these three doors lead to victory, the other three will lead to your death. Choose wisely. {grabbable}')
+note        = Usable('note', f'One of these three doors lead to victory, the other three will lead to \
+                    your death. Choose wisely. {grabbable}')
 sleg        = Usable('sleghammer', f'A heafty tool used for breaking things. {grabbable}') 
 crois       = Usable('croissant', f'A noice warm, buttered croissant. How did it get here? {grabbable}')
 
