@@ -17,6 +17,7 @@ class Game(Frame):
     STATUS_BAD_ITEM = 'I don\'t see'
     STATUS_BAD_SEARCH = 'There is nothing there'
     STATUS_BAD_EAT = 'Are you insane?! You can\'t eat that!'
+    STATUS_NEED_KEY = 'A key is needed to pass through that door'
 
     WIDTH = 800
     HEIGHT = 600
@@ -48,6 +49,13 @@ class Game(Frame):
         # pre-set rooms
         s1 = Room('Starting Room', 'room2.gif')
 
+        s2 = Room('Secret Room', 'room3.gif')
+
+        s2.addExit('door1', None)
+        s2.addExit('door2', 'Escape')
+        s2.addExit('door3', None)
+        s2.addItem(note)
+
         floor : list[Room] = []
         floor.append(s1)
 
@@ -56,6 +64,7 @@ class Game(Frame):
             floor.append(var)
         for i in range(len(floor)):
             if floor[i] == floor[-1]:
+                floor[i].final = True
                 break
             n = 0
             while n == 0:
@@ -77,11 +86,43 @@ class Game(Frame):
                     floor[i+1].addExit('east', floor[i])
                     n = 1
         
+        n1 = 0
+        while n1 == 0:
+            secret = gameSeed.randint(1,len(floor)-1)
+            tDirec = gameSeed.randint(1,4) 
+            if tDirec == 1 and 'north' not in floor[secret].exits:
+                floor[secret].addExit('north', s2)
+                s2.addExit('south', floor[secret])
+                n1 = 1
+            elif tDirec == 2 and 'east' not in floor[secret].exits: 
+                floor[secret].addExit('east', s2)
+                s2.addExit('west', floor[secret])
+                n1 = 1
+            elif tDirec == 3 and 'south' not in floor[secret].exits:
+                floor[secret].addExit('south', s2) 
+                s2.addExit('north', floor[secret])
+                n1 = 1
+            elif tDirec == 4 and 'west' not in floor[secret].exits: 
+                floor[secret].addExit('west', s2)
+                s2.addExit('east', floor[secret])
+                n1 = 1
+
         # add Key to floor
         k = gameSeed.randint(1,len(floor)-1)
         floor[k].isKey = True 
-        
 
+
+        # adds a painting to the floor
+        m = gameSeed.randint(1, len(floor)-1)
+        floor[m].addItem(painting)
+        floor[m].addItemNameSingle(painting)
+
+
+        # adds a puzzle to the floor
+        p = gameSeed.randint(1, len(floor)-1)
+        floor[p].addItem(puzzle)
+        floor[p].addItemNameSingle(puzzle)
+        
         return s1
 
 
@@ -91,7 +132,7 @@ class Game(Frame):
         r2 = Room('Room 2', 'room2.gif')
         r3 = Room('Room 3', 'room3.gif')
         r4 = Room('Room 4', 'room4.gif')
-
+    
         rooms = [r1, r2, r3, r4]
 
         # add exits
@@ -107,6 +148,8 @@ class Game(Frame):
         r4.addExit('north', r2)
         r4.addExit('west', r3)
         r4.addExit('south', None) 
+
+        
 
         # add items 
         r1.addItem(chair)
@@ -185,11 +228,20 @@ class Game(Frame):
         status = Game.STATUS_BAD_EXIT
 
         if dest in self.currentRoom.exits:
-            self.currentRoom = self.currentRoom.exits[dest]
-            status = Game.STATUS_ROOM_CHANGE
+            if self.currentRoom.exits[dest].final and str(key) in self.inventory:
+                self.inventory.remove(str(key))
+                self.currentRoom = self.currentRoom.exits[dest]
+                self.currentRoom.final = False
+                status = Game.STATUS_ROOM_CHANGE + '\n Used key'
+            elif self.currentRoom.exits[dest].final and str(key) not in self.inventory:
+                status = Game.STATUS_NEED_KEY
+            else:
+                self.currentRoom = self.currentRoom.exits[dest]
+                status = Game.STATUS_ROOM_CHANGE
         
         self.setStatus(status)
         self.setRoomImage()
+
 
     def handleLook(self, item):
         status = Game.STATUS_BAD_ITEM
@@ -215,6 +267,7 @@ class Game(Frame):
                 status = Game.STATUS_GRABBED
         
         self.setStatus(status)
+
 
     def handleSearch(self, item):
         status = Game.STATUS_BAD_SEARCH
@@ -242,6 +295,7 @@ class Game(Frame):
                 self.inventory.append(str(book))
                 status = "Book acquired"
         self.setStatus(status)
+
 
     def handleEat(self, item):
         status = Game.STATUS_BAD_EAT
